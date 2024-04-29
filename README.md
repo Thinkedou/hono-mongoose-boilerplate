@@ -6,6 +6,8 @@ _Copy .env.example to a .env file_
 -  `npm install`
 -  `npm run dev`
 
+Should be up on http://localhost:3000/api/creations
+
 ## Proposition de modèle
 **creations**
  ```js   
