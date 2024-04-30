@@ -8,7 +8,8 @@ api.get('/', async (c) => {
     const {
         limit=0,
         page=1,
-        sort=false
+        sort=false,
+        ...rest
     } = c.req.query()
     const skip = (+page-1)*+limit
        
@@ -27,8 +28,9 @@ api.get('/', async (c) => {
       }
     } 
     const query = {
-      categories:"firefly"
+      ...rest
     }
+    console.log({query,options})
     // const projection = {
     //   createdAt:0,
     //   updatedAt:0
