@@ -5,8 +5,22 @@ import { Creation,ICreations } from '../models/creations'
 const api = new Hono().basePath('/creations')
 
 api.get('/', async (c) => {
+    const {limit,page} = c.req.query()
+    console.log(limit,page)
+    const options = {
+      skip:0,
+      limit:3
+    }
+    const query = {
+      categories:"firefly"
+    }
+    const projection = {
+      createdAt:0,
+      updatedAt:0
+    }
     try {
-        const allCreas = await Creation.find({})
+    
+        const allCreas = await Creation.find(query,projection,options)
         return c.json(allCreas)
       } catch (error) {
         console.error(error);
