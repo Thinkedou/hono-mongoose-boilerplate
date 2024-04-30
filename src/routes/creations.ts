@@ -5,22 +5,37 @@ import { Creation,ICreations } from '../models/creations'
 const api = new Hono().basePath('/creations')
 
 api.get('/', async (c) => {
-    const {limit,page} = c.req.query()
-    console.log(limit,page)
-    const options = {
-      skip:0,
-      limit:3
+    const {
+        limit=0,
+        page=1,
+        sort=false
+    } = c.req.query()
+    const skip = (+page-1)*+limit
+       
+    const options  = {
+      skip,
+      limit:+limit
     }
+    if(sort){
+      const order = sort.includes('-') ? -1:1
+      const sortKey = order>0? sort: sort.substring(1,sort.length)
+      const sortOptions: Record<string, number> = {
+        [sortKey]:order
+      }
+      options['sort']={
+        ...sortOptions
+      }
+    } 
     const query = {
       categories:"firefly"
     }
-    const projection = {
-      createdAt:0,
-      updatedAt:0
-    }
+    // const projection = {
+    //   createdAt:0,
+    //   updatedAt:0
+    // }
     try {
     
-        const allCreas = await Creation.find(query,projection,options)
+        const allCreas = await Creation.find(query,{},options)
         return c.json(allCreas)
       } catch (error) {
         console.error(error);
