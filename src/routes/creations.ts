@@ -1,5 +1,5 @@
 import { Hono } from 'hono'
-import { HydratedDocument } from 'mongoose';
+import { HydratedDocument,isValidObjectId } from 'mongoose';
 import { Creation,ICreations } from '../models/creations'
 
 const api = new Hono().basePath('/creations')
@@ -25,9 +25,51 @@ api.post('/', async (c) => {
   }
 })
 
-api.get('/:id', (c) => {
+api.put('/:id', async (c) => {
   const {id} = c.req.param()
-  return c.json(`get ${id}`)
+  const body = await c.req.json()
+  if(isValidObjectId(id)){
+    const query = {
+      _id:id
+    }
+    const updateQuery = {
+      $set:{
+        ...body
+      }
+    }
+
+    try {
+      const updatedCrea = await Creation.findOneAndUpdate(query,updateQuery,{new:true})
+      return c.json(updatedCrea, 203)
+    } catch (error) {
+      return c.json(error._message,400)
+    }
+  }else{
+    return c.text('error wrong id',400)
+  }
+  
+})
+
+
+api.get('/:id', async (c) => {
+  const {id} = c.req.param()
+  if(isValidObjectId(id)){
+    const oneCrea = await Creation.findOne({_id:id})
+    return c.json(oneCrea)
+  }else{
+    return c.text('error wrong id',400)
+  }
+})
+
+
+api.delete('/:id', async (c) => {
+  const {id} = c.req.param()
+  if(isValidObjectId(id)){
+    const toDel = await Creation.deleteOne({_id:id})
+    return c.json(toDel,200)
+  }else{
+    return c.text('error wrong id',400)
+  }
 })
 
 export default api
