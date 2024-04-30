@@ -7,7 +7,7 @@ interface iUser {
   firstName:string;
 }
 
-interface ICreations {
+export interface ICreations {
   imgUri: string;
   prompt: string;
   categories?: Array<string>;
@@ -18,7 +18,7 @@ interface ICreations {
 
 // 2. Create a Schema corresponding to the document interface.
 const creationSchema = new Schema<ICreations>({
-  imgUri: { type: String, required: true, lowercase: true, trim: true },
+  imgUri: { type: String, required: [true, 'imgUri is mandatory'], lowercase: true, trim: true },
   prompt: { type: String, required: true },
   categories: {type:[String]},
   publicationDate:{type:Date,default:Date.now},
