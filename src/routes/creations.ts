@@ -37,10 +37,9 @@ api.put('/:id', async (c) => {
         ...body
       }
     }
-
     try {
       const updatedCrea = await Creation.findOneAndUpdate(query,updateQuery,{new:true})
-      return c.json(updatedCrea, 203)
+      return c.json(updatedCrea, 201)
     } catch (error) {
       return c.json(error._message,400)
     }
@@ -50,6 +49,35 @@ api.put('/:id', async (c) => {
   
 })
 
+api.patch('/:id', async (c) => {
+  const {id} = c.req.param()
+  const body = await c.req.json()
+  const {categories=false,...rest} = body
+
+  if(isValidObjectId(id)){
+    const query = {
+      _id:id
+    }
+    const queryUpdate: Record<string, object> = {}
+    queryUpdate['$set'] = {
+      ...rest
+    }
+    if(categories){
+      queryUpdate['$addToSet'] = {
+        categories
+      }
+    }
+    try {
+      const updatedCrea = await Creation.findOneAndUpdate(query,queryUpdate,{new:true})
+      return c.json(updatedCrea, 201)
+    } catch (error) {
+      return c.json(error._message,400)
+    }
+  }else{
+    return c.text('error wrong id',400)
+  }
+  
+})
 
 api.get('/:id', async (c) => {
   const {id} = c.req.param()

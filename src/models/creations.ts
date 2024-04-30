@@ -17,14 +17,19 @@ export interface ICreations {
 }
 
 // 2. Create a Schema corresponding to the document interface.
-const creationSchema = new Schema<ICreations>({
-  imgUri: { type: String, required: [true, 'imgUri is mandatory'], lowercase: true, trim: true },
-  prompt: { type: String, required: true },
-  categories: {type:[String]},
-  publicationDate:{type:Date,default:Date.now},
-  aiEngine:String,
-  author:{type:Schema.Types.Mixed}
-});
+const creationSchema = new Schema<ICreations>(
+  {
+    imgUri: { type: String, required: [true, 'imgUri is mandatory'], lowercase: true, trim: true },
+    prompt: { type: String, required: true },
+    categories: {type:[String]},
+    publicationDate:{type:Date,default:Date.now},
+    aiEngine:String,
+    author:{type:Schema.Types.Mixed}
+},
+{
+  timestamps: true
+}
+);
 
 // 3. Create a Model.
 const Creation = model<ICreations>('creations', creationSchema);
