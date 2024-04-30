@@ -1,10 +1,10 @@
 import { Hono } from 'hono'
+import { Creation } from '../models/creations'
 
 const api = new Hono().basePath('/creations')
 
 api.get('/', async (c) => {
     try {
-        // ici find all 
         return c.json([])
       } catch (error) {
         console.error(error);
@@ -13,7 +13,14 @@ api.get('/', async (c) => {
 })
 
 api.post('/', async (c) => {
-  return c.json({newDoc:true}, 201)
+
+  const newCrea = new Creation({
+      imgUri:' https://testtesTR.fr ',
+      prompt:'test pour new Crea'
+  })
+  const saveCrea = await newCrea.save()
+
+  return c.json(saveCrea, 201)
 })
 
 api.get('/:id', (c) => {

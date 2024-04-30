@@ -8,7 +8,6 @@ const CONNECTION_STRING = `mongodb+srv://${myEnv.MONGODB_USER}:${myEnv.MONGODB_P
 
 export async function DbConnect(){
     try {    
-        // _declareMongoEvents()
         const _db =  await connect(CONNECTION_STRING)
         console.log(`🟢 connected to Atlas Cluster: ${myEnv.MONGODB_CLUSTER}`);
         return _db
