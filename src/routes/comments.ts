@@ -2,6 +2,9 @@ import { IComment,Comment } from './../models/comments';
 import { Hono } from 'hono'
 import { HydratedDocument, isValidObjectId } from 'mongoose';
 
+type findOptions={
+  [key:string]:object|string|number
+}
 
 const api = new Hono().basePath('/comments')
 
@@ -10,13 +13,19 @@ api.get('/', async (c) => {
         limit=0,
         page=1,
         sort=false,
+        embed=false,
         ...rest
     } = c.req.query()
     const skip = (+page-1)*+limit
        
-    const options  = {
+    const options:findOptions = {
       skip,
-      limit:+limit
+      limit
+    }
+    if(embed){
+      options['populate']={
+        path:'parentCreationRef'
+      }
     }
     if(sort){
       const order = sort.includes('-') ? -1:1

@@ -3,6 +3,9 @@ import { HydratedDocument,isValidObjectId } from 'mongoose';
 import { Creation,ICreations } from '../models/creations'
 
 const api = new Hono().basePath('/creations')
+type findOptions={
+  [key:string]:object|string|number
+}
 
 api.get('/', async (c) => {
     const {
@@ -13,7 +16,7 @@ api.get('/', async (c) => {
     } = c.req.query()
     const skip = (+page-1)*+limit
        
-    const options  = {
+    const options:findOptions  = {
       skip,
       limit:+limit
     }
