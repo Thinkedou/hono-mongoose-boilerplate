@@ -13,7 +13,8 @@ export interface ICreations {
   categories?: Array<string>;
   publicationDate?:Date;
   aiEngine?:string;
-  author:iUser
+  author:iUser,
+  comments:Array<object>
 }
 
 // 2. Create a Schema corresponding to the document interface.
@@ -24,12 +25,17 @@ const creationSchema = new Schema<ICreations>(
     categories: {type:[String]},
     publicationDate:{type:Date,default:Date.now},
     aiEngine:String,
+    comments:{type:[Schema.Types.Mixed]},
     author:{type:Schema.Types.Mixed}
 },
 {
   timestamps: true
 }
 );
+
+
+
+
 
 // 3. Create a Model.
 const Creation = model<ICreations>('creations', creationSchema);

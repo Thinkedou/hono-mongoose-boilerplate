@@ -1,4 +1,5 @@
 import { Schema, model, Types  } from 'mongoose';
+import { Creation,ICreations } from  './creations'
 
 // 1. Create an interface representing a document in MongoDB.
 
@@ -29,6 +30,22 @@ const commentSchema = new Schema<IComment>(
   timestamps: true
 }
 );
+
+// Query middlewares
+commentSchema.post<IComment>("save", async function(doc) {
+  // ici je vais faire un push dans mon tableau de comments
+  const {parentCreationRef} = doc
+  const pushComment = await Creation.findOneAndUpdate(
+    { _id:parentCreationRef},
+    {
+      $addToSet:{
+        comments:doc
+      }
+    }
+  )
+  console.log(pushComment)
+  console.log(doc)
+});
 
 // 3. Create a Model.
 const Comment = model<IComment>('comments', commentSchema);
